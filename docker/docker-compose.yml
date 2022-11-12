@@ -2,8 +2,7 @@ version: '3'
 
 services:
   todoback:
-    image: node:14-alpine
-    container_name: back_1
+    image: todobackend
     ports:
       - 3001:3001
     volumes:
@@ -13,20 +12,19 @@ services:
     networks:
       - my-network
     environment:
-      #MYSQL_HOST: mysql
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
 
   todofront:
-    image: node:14-alpine
-    #container_name: front_1
+    image: todofrontend
     ports:
       - 3000:3000
     depends_on:
       - "todoback"
     environment:
       REACT_APP_API_HOST: todoback
+      REACT_APP_API_PORT: 3001
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
@@ -34,13 +32,13 @@ services:
       - my-network
 
   todotests:
-    image: mjgargani/puppeteer:trybe1.0
-    #container_name: tests_1
+    image: todotests
     depends_on:
       - "todofront"
       - "todoback"
     environment:
       FRONT_HOST: todofront
+      FRONT_PORT: 3000
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
       MYSQL_DB: todos
@@ -49,7 +47,6 @@ services:
   
   db:
     image: mysql:5.7
-    #container_name: banco
     volumes:
       - db-data:/var/lib/mysql
     environment:

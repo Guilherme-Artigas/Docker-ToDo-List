@@ -1,10 +1,20 @@
 version: '3'
 
 services:
+  db:
+    image: mysql:5.7
+
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - my-network
+
   todoback:
     image: node:14-alpine
     ports:
       - 3001
+    depends_on:
+      - "db"
     networks:
       - my-network
 
@@ -28,6 +38,9 @@ services:
       FRONT_HOST: todofront
     networks:
       - my-network
+
+volumes:
+  db-data:
 
 networks:
   my-network:

@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  todoback:
+    image: node:14-alpine
+    ports:
+      - 3001
+    networks:
+      - my-network
+
+  todofront:
+    image: node:14-alpine
+    ports:
+      - 3000
+    depends_on:
+      - "todoback"
+    environment:
+      REACT_APP_API_HOST: todoback
+    networks:
+      - my-network
+
+  todotests:
+    image: mjgargani/puppeteer:trybe1.0
+    depends_on:
+      - "todofront"
+      - "todoback"
+    environment:
+      FRONT_HOST: todofront
+    networks:
+      - my-network
+
+networks:
+  my-network:

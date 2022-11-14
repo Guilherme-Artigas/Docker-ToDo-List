@@ -7,14 +7,8 @@ services:
       - 3001:3001
     volumes:
       - db-data:/var/lib/mysql
-    depends_on:
-      - "db"
     networks:
       - my-network
-    environment:
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: todos
 
   todofront:
     image: todofrontend
@@ -25,9 +19,6 @@ services:
     environment:
       REACT_APP_API_HOST: todoback
       REACT_APP_API_PORT: 3001
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: todos
     networks:
       - my-network
 
@@ -39,19 +30,8 @@ services:
     environment:
       FRONT_HOST: todofront
       FRONT_PORT: 3000
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_DB: todos
     networks:
       - my-network
-  
-  db:
-    image: mysql:5.7
-    volumes:
-      - db-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: todos
 
 volumes:
   db-data:
